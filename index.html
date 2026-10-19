@@ -101,7 +101,6 @@ function startMatch(idx){
  matchTimer=setInterval(tick,1500);tick()
 }
 function stopMatch(){clearInterval(matchTimer)}
-$('skipMatch').onclick=()=>{while(!finished&&cursor<steps.length)tick();if(!finished)finish()};$('endMatch').onclick=()=>{if(finished){page='dashboard';render()}};matchTimer=setInterval(tick,1300);tick()}
 function nextSeason(){if(state.fixtures.some(f=>!f.done)){showToast('Finish every fixture before starting a new season');return}if(!confirm('Start season '+(state.season+1)+'/'+(state.season+2)+'? League results will reset; your squad and transfers remain.'))return;state.season++;state.week=1;state.teams.forEach(t=>{t.points=t.played=t.w=t.d=t.l=t.gf=t.ga=0;t.rating=Math.min(94,Math.max(55,t.rating+(Math.random()*4-1.5))) });state.players.forEach(p=>{p.age++;if(p.age<24&&Math.random()<.45)p.ovr=Math.min(95,p.ovr+1);if(p.age>32&&Math.random()<.3)p.ovr=Math.max(45,p.ovr-1)});state.teams.forEach(t=>{if(t.short!==state.club)t.players=makePlayers(t,t.rating)});myTeam().players=state.players;state.fixtures=makeFixtures(state.teams.map(t=>t.short));state.table=state.teams.map(t=>({short:t.short,name:t.name,emoji:t.emoji,rating:t.rating,points:0,played:0,w:0,d:0,l:0,gf:0,ga:0}));state.playedMatches=[];state.week=1;save();page='dashboard';render();showToast('Welcome to the new season!')}
 document.querySelectorAll('#nav button[data-page]').forEach(b=>b.onclick=()=>{if(page==='match'&&matchTimer)stopMatch();page=b.dataset.page;render()});
 if(!load())showSetup();else render();
